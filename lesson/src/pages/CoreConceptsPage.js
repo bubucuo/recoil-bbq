@@ -1,3 +1,4 @@
+import {useState} from "react";
 import {atom, selector, useRecoilState, useRecoilValue} from "recoil";
 
 export default function CoreConceptsPage(props) {
@@ -5,8 +6,9 @@ export default function CoreConceptsPage(props) {
     <div>
       <h3>CoreConceptsPage</h3>
       <FontButton />
-      <Text />
       <FontButton2 />
+
+      <Text />
     </div>
   );
 }
@@ -15,13 +17,18 @@ export default function CoreConceptsPage(props) {
 // Atom 是状态的单位。它们可更新也可订阅：当 atom 被更新，每个被订阅的组件都将使用新值进行重渲染。
 // 它们也可以在运行时创建。可以使用 atom 替代组件内部的 state。如果多个组件使用相同的 atom，
 // 则这些组件共享 atom 的状态。
+
 const fontSizeState = atom({
   key: "fontSizeState",
-  default: 14,
+  default: 14, //默认值 | 初始值
 });
 
 function FontButton() {
+  // get 、 set
+  // const [fontSize, setFontSize] = useState(14);
+  // get | set
   const [fontSize, setFontSize] = useRecoilState(fontSizeState);
+
   return (
     <button onClick={() => setFontSize((size) => size + 1)} style={{fontSize}}>
       Click to Enlarge
@@ -30,7 +37,7 @@ function FontButton() {
 }
 
 function Text() {
-  const [fontSize, setFontSize] = useRecoilState(fontSizeState);
+  const fontSize = useRecoilValue(fontSizeState);
   return <p style={{fontSize}}>This text will increase in size too.</p>;
 }
 
@@ -43,6 +50,7 @@ const fontSizeLabelState = selector({
   get: ({get}) => {
     const fontSize = get(fontSizeState);
     const unit = "px";
+
     return `${fontSize}${unit}`;
   },
 });
@@ -56,7 +64,7 @@ function FontButton2() {
       <div>Current font size: {fontSizeLabel}</div>
 
       <button onClick={() => setFontSize(fontSize + 1)} style={{fontSize}}>
-        Click to Enlarge
+        2 Click to Enlarge
       </button>
     </>
   );
