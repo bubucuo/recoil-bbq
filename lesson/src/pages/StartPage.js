@@ -4,7 +4,9 @@ export default function StartPage(props) {
   return (
     <div>
       <h5>StartPage</h5>
-      <CharacterCounter />
+
+      <TextInput />
+      <CharacterCount />
     </div>
   );
 }
@@ -13,15 +15,6 @@ const textState = atom({
   key: "textState", // 唯一ID
   default: "", // 默认值/初始值
 });
-
-function CharacterCounter() {
-  return (
-    <div>
-      <TextInput />
-      <CharacterCount />
-    </div>
-  );
-}
 
 function TextInput() {
   // 当你同时需要对 atom 进行读写时，使用此 hook。使用此 hook 会使组件订阅 atom。
@@ -40,14 +33,17 @@ function TextInput() {
   );
 }
 
+// 抽离派生逻辑，复用
 const charCountState = selector({
   key: "charCountState", // 全局下保持唯一性
   get: ({get}) => {
     const text = get(textState);
+    // todo 省略非常非常复杂的派生逻辑
     return text.length;
   },
 });
 
+// * 派生状态
 function CharacterCount() {
   // 当你仅需要读取 atom 时，使用此 hook。使用此 hook 会使组件订阅 atom。
   const count = useRecoilValue(charCountState);
