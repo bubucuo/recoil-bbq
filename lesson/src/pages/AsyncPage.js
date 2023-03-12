@@ -19,8 +19,6 @@ export default function AsyncPage(props) {
   );
 }
 
-const userAtomState = atom({key: "userAtom", default: {}});
-
 const userState = selectorFamily({
   key: "user",
   get:
@@ -29,7 +27,6 @@ const userState = selectorFamily({
       const userData = await fetch(`https://randomuser.me/api`).then((res) =>
         res.json()
       );
-
       return userData.results[0];
     },
 });
@@ -37,9 +34,5 @@ const userState = selectorFamily({
 function UserData({userId}) {
   const [user, setUser] = useRecoilState(userState(userId));
 
-  return (
-    <div>
-      <p>name: {user.name.first}</p>
-    </div>
-  );
+  return <p>name: {user?.name?.first}</p>;
 }
